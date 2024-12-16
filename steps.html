@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minishell Project Plan</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <header>
+        <h1>Minishell Project Plan</h1>
+    </header>
+
+    <nav>
+        <h2>Table of Contents</h2>
+        <ul>
+            <li><a href="#research">1. Research and Understand Shell Basics</a></li>
+            <li><a href="#structure">2. Set Up Your Project Structure</a></li>
+            <li><a href="#input">3. Basic Input Handling</a></li>
+            <li><a href="#parsing">4. Command Parsing</a></li>
+            <li><a href="#env">5. Environment Variables Handling</a></li>
+            <li><a href="#builtins">6. Implement Built-in Commands</a></li>
+            <li><a href="#process">7. Process Management (Fork and Exec)</a></li>
+            <li><a href="#redirections">8. Implement Redirections (&lt;, &gt;, &gt;&gt;)</a></li>
+            <li><a href="#pipes">9. Pipes (|)</a></li>
+            <li><a href="#signals">10. Signal Handling</a></li>
+            <li><a href="#memory">11. Memory Management and Error Handling</a></li>
+            <li><a href="#testing">12. Testing and Debugging</a></li>
+            <li><a href="#polishing">13. Final Polishing</a></li>
+        </ul>
+    </nav>
+
+    <section id="research">
+        <h2>1. Research and Understand Shell Basics</h2>
+        <p>Familiarize yourself with how a shell works, what it does, and its core components.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Study how basic commands are executed in Bash or other shells.</li>
+            <li>Understand processes, <code>fork()</code>, <code>execve()</code>, and how a shell handles child processes.</li>
+            <li>Review how redirections (&lt;, &gt;, &gt;&gt;) and pipes (|) work.</li>
+        </ul>
+        <img src="./assets/understanding_shell.png" alt="Understanding Shell Basics Image">
+    </section>
+
+    <section id="structure">
+        <h2>2. Set Up Your Project Structure</h2>
+        <p>Organize your codebase to ensure you can build, test, and debug easily.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Create the basic file structure, separating functionalities into modules (e.g., parsing, execution, built-ins, etc.).</li>
+            <li>Set up the Makefile for easy compilation.</li>
+        </ul>
+        <img src="./assets/project_structure.png" alt="Project Structure Image">
+    </section>
+
+    <section id="input">
+        <h2>3. Basic Input Handling</h2>
+        <p>Capture user input and print it for basic testing.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Implement a loop that continuously reads user input.</li>
+            <li>Test this by simply printing the input back to the terminal (<code>readline()</code> is often used for this).</li>
+        </ul>
+        <img src="./assets/basic_input_handling.png" alt="Basic Input Handling Image">
+    </section>
+
+    <section id="parsing">
+        <h2>4. Command Parsing</h2>
+        <p>Convert the raw input into commands and arguments that the shell can interpret.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Implement a basic tokenizer to split the input string into individual commands and arguments.</li>
+            <li>Handle special characters like quotes ('' or "") to preserve the integrity of arguments containing spaces.</li>
+            <li>Identify commands, arguments, and operators (e.g., |, &gt;, &gt;&gt;, &lt;).</li>
+        </ul>
+        <img src="./assets/command_parsing.png" alt="Command Parsing Image">
+    </section>
+
+    <section id="env">
+        <h2>5. Environment Variables Handling</h2>
+        <p>Implement functions to manage environment variables (e.g., $PATH, $HOME).</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Create helper functions to retrieve and manipulate environment variables.</li>
+            <li>Make sure commands can use these variables dynamically during execution.</li>
+        </ul>
+        <img src="./assets/env_management.png" alt="Environment Variables Handling Image">
+    </section>
+
+    <section id="builtins">
+        <h2>6. Implement Built-in Commands</h2>
+        <p>Implement core shell commands like <code>cd</code>, <code>echo</code>, <code>pwd</code>, <code>export</code>, <code>unset</code>, <code>env</code>, and <code>exit</code>.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Write individual functions for each built-in command.</li>
+            <li>Make sure to handle special cases for each, like <code>cd</code> with or without arguments or <code>exit</code> with a status code.</li>
+        </ul>
+        <img src="./assets/built_in_commands.png" alt="Built-in Commands Image">
+    </section>
+
+    <section id="process">
+        <h2>7. Process Management (Fork and Exec)</h2>
+        <p>Start executing external commands using <code>fork()</code> and <code>execve()</code>.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Implement the logic for creating a new process with <code>fork()</code> and replacing the process image with the desired command using <code>execve()</code>.</li>
+            <li>Handle the waiting and reaping of child processes with <code>wait()</code> or <code>waitpid()</code>.</li>
+        </ul>
+        <img src="./assets/process_management.png" alt="Process Management Image">
+    </section>
+
+    <section id="redirections">
+        <h2>8. Implement Redirections (&lt;, &gt;, &gt;&gt;)</h2>
+        <p>Handle input/output redirection so commands can read/write from/to files.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Redirect <code>stdin</code> and <code>stdout</code> using <code>dup2()</code> for file operations.</li>
+            <li>Implement logic for &gt;, &gt;&gt; (append mode), and &lt; (input redirection).</li>
+        </ul>
+        <img src="./assets/redirections.png" alt="Redirections Image">
+    </section>
+
+    <section id="pipes">
+        <h2>9. Pipes (|)</h2>
+        <p>Handle piping so the output of one command becomes the input of another.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Use <code>pipe()</code> to create a pipe and <code>dup2()</code> to redirect the file descriptors for the commands.</li>
+            <li>Ensure the shell can handle multiple pipes (e.g., <code>cmd1 | cmd2 | cmd3</code>).</li>
+        </ul>
+        <img src="./assets/pipes.png" alt="Pipes Image">
+    </section>
+
+    <section id="signals">
+        <h2>10. Signal Handling</h2>
+        <p>Handle common signals like <code>Ctrl+C</code>, <code>Ctrl+D</code>, and <code>Ctrl+\</code> for interrupting processes or closing the shell.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Implement signal handling using <code>signal()</code> or <code>sigaction()</code>.</li>
+            <li>Customize the behavior of the shell for specific signals, e.g., ignoring <code>Ctrl+C</code> during command input.</li>
+        </ul>
+        <img src="./assets/signal_handling.png" alt="Signal Handling Image">
+    </section>
+
+    <section id="memory">
+        <h2>11. Memory Management and Error Handling</h2>
+        <p>Ensure your shell is leak-free and robust against bad inputs or edge cases.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Use tools like <code>valgrind</code> to check for memory leaks.</li>
+            <li>Implement proper error messages and exit codes for failed commands or operations.</li>
+            <li>Ensure the shell doesn’t crash on invalid inputs (e.g., malformed redirections, pipes without commands).</li>
+        </ul>
+    </section>
+
+    <section id="testing">
+        <h2>12. Testing and Debugging</h2>
+        <p>Rigorously test your shell to ensure it works in all expected scenarios.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Test each feature incrementally as you build them.</li>
+            <li>Test edge cases, such as invalid commands, excessive pipes, or incorrect redirection formats.</li>
+        </ul>
+    </section>
+
+    <section id="polishing">
+        <h2>13. Final Polishing</h2>
+        <p>Finalize your shell, ensuring usability and stability.</p>
+        <p><strong>Actions:</strong></p>
+        <ul>
+            <li>Add features such as a command history (optional) using <code>readline()</code>.</li>
+            <li>Ensure consistent formatting of the prompt, clean output, and user-friendly error messages.</li>
+        </ul>
+    </section>
+
+    <section id='overview'>
+        <h2>Overview</h2>
+        <p>Building a shell from scratch is a challenging but rewarding project that will deepen your understanding of operating systems, processes, and system calls. By following these steps, you can build a functional shell that can execute basic commands, handle redirections and pipes, and manage processes effectively.</p>
+        <img src="./assets/overview.png" alt="Minishell Overview Image">
+    </section>
+
+    <footer>
+        <p>By following these steps, you can build a functional shell that can execute basic commands, handle redirections and pipes, and manage processes effectively.</p>
+        <p>Good luck with your Minishell project!</p>
+</body>
+</html>
+
