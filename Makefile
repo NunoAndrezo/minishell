@@ -16,40 +16,27 @@ NAME = minishell
 CC = cc
 
 # Flags
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g 
 POSTCC = -I $(INC_DIR) -I $(LIB_DIR) 
+
 # Directories
 SRC_DIR = ./src
 OBJ_DIR = ./obj
 INC_DIR = ./inc
 LIB_DIR = $(INC_DIR)/lib_ft
 
-# SRC directories
-BUILTINS_DIR = $(SRC_DIR)/builtins
-PARSING_DIR = $(SRC_DIR)/parsing
-EXEC_DIR = $(SRC_DIR)/exec
-UTILS_DIR = $(SRC_DIR)/utils
-ENV_DIR = $(SRC_DIR)/env
-SIGNALS_DIR = $(SRC_DIR)/signals
-HISTORY_DIR = $(SRC_DIR)/history
-HERE_DOC_DIR = $(SRC_DIR)/here_doc
-EXPANSIONS_DIR = $(SRC_DIR)/expansions
-PATHS_DIR = $(SRC_DIR)/path
-REDIRECTION_DIR = $(SRC_DIR)/redirection
+# Object directory
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
 
 # Rule to build the included library
 LIBS = $(LIB_DIR)/libft.a
 
 # Source and bonus files
-SRC_FILES = $(find $(SRC_DIR) -name "*.c")
-BONUS_FILES = $(find $(SRC_DIR) -name "*_bonus.c")
-
-# Object directory
-$(OBJ_DIR):
-	@mkdir -p $(OBJ_DIR)
+SRC_FILES = $(shell find $(SRC_DIR) -type f -name "*.c")
 
 # Object files
-OBJ_FILES = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 
 # Total number of files and bar length
 TOTAL_FILES := $(words $(SRC_FILES))
@@ -65,9 +52,10 @@ endef
 
 # Rule to compile .c into .o with progress bar
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@$(eval COMPILED_FILES=$(words $(OBJ_FILES:$(OBJ_DIR)/%.o=$(OBJ_DIR)/%.o)))
+	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) $(POSTCC) -c $< -o $@
-	@$(call print_bar,$(COMPILED_FILES))
+	@$(call print_bar, $(words $(OBJ_FILES)))
+	@echo -n " $(GREEN)[$(words $(OBJ_FILES))/$(TOTAL_FILES)]$(NOCOLOR) Compiling $<\r"
 
 # Rule to compile the included library
 $(LIBS):
@@ -75,16 +63,16 @@ $(LIBS):
 	@echo "$(GREEN)Library built successfully.$(NOCOLOR)"
 
 # Rule to compile the project
-$(NAME): $(OBJ_DIR) $(OBJ_FILES) 
+$(NAME): $(OBJ_DIR) $(OBJ_FILES)
 	@echo "$(YELLOW)Building project...$(NOCOLOR)"
-	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -o $(NAME) $(LIBS)
+	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -lreadline -L$(LIB_DIR) -lft -o $(NAME)
 	@echo "$(GREEN)Project built successfully.$(NOCOLOR)"
 
 # build only the library
 libs: $(LIBS)
 
 # build the project
-build: $(LIBS) $(NAME)
+build: $(NAME)
 
 # clean the object files
 clean:
@@ -108,4 +96,3 @@ run: build
 	@./$(NAME)
 
 .PHONY: all clean fclean re run libs build bonus
-

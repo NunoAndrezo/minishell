@@ -6,7 +6,7 @@
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:01:28 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/17 18:29:07 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/17 21:21:16 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ int     main(void);
 // shell.c
 // main function to run the minishell program
 void    run_shell(t_shell *shell);
+
+// init.c
+// initializes the shell struct
+t_shell *init_shell(void);
 
 // utils.c
 
