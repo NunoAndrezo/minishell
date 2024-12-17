@@ -1,4 +1,4 @@
 # Minishell Project
 
-The project plan is available [here](https://your-username.github.io/your-repository-name/).
+The project plan is available [here](https://jcmspg.github.io/minishell/).
 
