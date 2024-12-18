@@ -1,36 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   debug_1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/17 20:56:43 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/18 21:40:58 by joamiran         ###   ########.fr       */
+/*   Created: 2024/12/18 22:20:32 by joamiran          #+#    #+#             */
+/*   Updated: 2024/12/18 22:24:01 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "../minishell.h"
 
-int main(int argc, char **argv, char **env)
+// Print the enviroment variables
+void print_env(t_env *env)
 {
-    (void)argv;
+    t_env_var *tmp;
 
-    // if it has any arguments, print the error message
-    if (argc > 1)
+    tmp = env->head;
+    while (tmp)
     {
-        ft_putstr_fd("Error: minishell does not accept arguments\n", 2);
-        //print monke to error
-        ft_putstr_fd(monke, 2);
-
-        return (1);
+        printf("%s=%s\n", tmp->key, tmp->value);
+        tmp = tmp->next;
     }
-
-    t_shell *shell;
-    
-    shell = init_shell(env);
-
-    run_shell(shell);
-    return (0);
 }
+
+
 

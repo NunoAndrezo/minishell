@@ -6,57 +6,43 @@
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:09:42 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/17 21:33:38 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/18 22:24:26 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-
-// This function initializes the shell
-t_shell	*init_shell(void)
-{
-	t_shell	*shell;
-
-	ft_printf("Initializing shell\n"); // print initializing shell
-	shell = ft_calloc(1, sizeof(t_shell)); // allocate memory for the shell
-	if (!shell)
-	{
-		ft_putstr_fd("Error: malloc failed\n", 2);
-		exit(1);
-	}
-	
-	ft_printf("Shell initialized\n");
-	return (shell);
-}
+#include "../minishell.h"
 
 void	run_shell(t_shell *shell)
 {
+    //setup the signal handler
+    setup_signals();
+
 	// for now it just starts the shell
 	while (1)
 	{
 		// read the input
 		shell->line = readline(PROMPT);
-		// print the input
+
+        if (!shell->line)
+        {
+            ft_printf("exiting\n");
+            exit_shell(shell);
+        }
+	
+        // print the input
 		if (shell->line)
 		{
             // if the input is "exit" then break the loop
 			if (ft_strcmp(shell->line, "exit") == 0)
-				break ;
-
+                exit_shell(shell);
+            
+            if (ft_strcmp(shell->line, "env") == 0)
+                print_env(shell->env);
             // print the input and the number of letters
-			ft_printf("[%s] with [%d] letters\n", shell->line,
-				ft_strlen(shell->line));
+			ft_printf("line goes brrrrrr \n");
 
 			// free the input
 			free(shell->line);
 		}
 	}
-
-    // print the exit message
-	ft_printf("Exiting minishell\n");
-	
-    // free the shell
-    free(shell->line);
-	free(shell);
 }
