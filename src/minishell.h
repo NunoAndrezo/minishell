@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:01:28 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/30 16:29:53 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/30 19:55:46 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ void    run_shell(t_shell *shell);      // function to run the shell
 // init.c
 // initializes the shell struct
 t_shell *init_shell(char **env);        // function to initialize the shell
+void ft_print_harambe(void);           // function to print harambe
 
 // utils.c
 void    new_prompt(void);               // function to print the prompt

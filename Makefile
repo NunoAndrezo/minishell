@@ -16,8 +16,8 @@ NAME = minishell
 CC = cc
 
 # Flags
-CFLAGS = -Wall -Wextra -Werror -g -lreadline
-POSTCC = -I $(INC_DIR) -I $(LIB_DIR) 
+CFLAGS = -Wall -Wextra -Werror -g
+POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -lreadline 
 
 # Directories
 SRC_DIR = ./src
