@@ -16,7 +16,7 @@ NAME = minishell
 CC = cc
 
 # Flags
-CFLAGS = -Wall -Wextra -Werror -g 
+CFLAGS = -Wall -Wextra -Werror -g -lreadline
 POSTCC = -I $(INC_DIR) -I $(LIB_DIR) 
 
 # Directories
@@ -72,7 +72,7 @@ $(LIBS):
 $(NAME): $(OBJ_FILES)
 	@echo ""
 	@echo "$(YELLOW)Creating $(NAME)..."
-	@ar rcs $(NAME) $(OBJ_FILES)
+	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -o $(NAME) $(LIBS)
 	@sleep 0.2 # Just to let the loading bar finish smoothly
 	@echo -n "\r\033[K" # Erase the loading bar
 	@echo "$(GREEN)$(NAME) created successfully.$(NOCOLOR)"
