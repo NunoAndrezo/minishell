@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:01:28 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/19 20:09:41 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/30 16:29:53 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,11 @@ t_env	*copy_env(char **env);                              // function to copy th
 // here_doc.c
 
 // history.c
+
+// validations.c
+bool    is_empty(char *command);                            // function to check if the command is empty
+bool    is_builtin(char *command);                          // function to check if the command is a built-in command
+bool    validate_command(char *command);                    // function to check if the command is valid
 
 // free.c
 void	free_array(char **array);           // function to free an array
