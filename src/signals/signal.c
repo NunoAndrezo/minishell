@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 01:05:05 by nuno              #+#    #+#             */
-/*   Updated: 2024/12/19 18:05:25 by joamiran         ###   ########.fr       */
+/*   Updated: 2025/01/06 21:50:04 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	setup_signals(void)
 void	siginfo_handler(int sig, siginfo_t *info, void *context)
 {
 	// aqui adicionas o que quiseres para o minishell
-	context = NULL;
+	(void)context;
 	if (sig == SIGINT)
 		new_prompt(); // Print new prompt
 	else if (sig == SIGQUIT)

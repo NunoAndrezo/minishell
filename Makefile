@@ -17,7 +17,7 @@ CC = cc
 
 # Flags
 CFLAGS = -Wall -Wextra -Werror -g
-POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -lreadline 
+POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -L/usr/lib -lreadline -lncurses
 
 # Directories
 SRC_DIR = ./src
