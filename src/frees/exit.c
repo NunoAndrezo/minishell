@@ -6,7 +6,7 @@
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:31:01 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/18 22:18:02 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:44:35 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,22 @@ void free_env(t_env *env)
         tmp = next;
     }
     free(env);
+}
+
+// free tokens
+void	free_tokens(char **tokens)
+{
+    int	i;
+
+    i = 0;
+    if (!tokens)
+        return ;
+    while (tokens[i])
+    {
+        free(tokens[i]);
+        i++;
+    }
+    free(tokens);
 }
 
 // free the shell

@@ -16,8 +16,8 @@ NAME = minishell
 CC = cc
 
 # Flags
-CFLAGS = -Wall -Wextra -Werror -g 
-POSTCC = -I $(INC_DIR) -I $(LIB_DIR) 
+CFLAGS = -Wall -Wextra -Werror -g
+POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -L/usr/lib -lreadline -lncurses
 
 # Directories
 SRC_DIR = ./src
@@ -36,26 +36,32 @@ LIBS = $(LIB_DIR)/libft.a
 SRC_FILES = $(shell find $(SRC_DIR) -type f -name "*.c")
 
 # Object files
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
+OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES)) 
 
 # Total number of files and bar length
 TOTAL_FILES := $(words $(SRC_FILES))
 BAR_SYMBOL := ▓
-
-# Function to print the loading bar incrementally
-define print_bar
-	@CURRENT_PROGRESS=$$(( $(1) * 50 / $(TOTAL_FILES) )); \
-	echo -n $(CYAN); \
-	for i in $$(seq 1 $$CURRENT_PROGRESS); do echo -n $(BAR_SYMBOL); done; \
-	echo -n $(NOCOLOR)
-endef
+BAR_LENGTH := 50
+PROGRESS := 0
 
 # Rule to compile .c into .o with progress bar
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(POSTCC) -c $< -o $@
-	@$(call print_bar, $(words $(OBJ_FILES)))
-	@echo -n " $(GREEN)[$(words $(OBJ_FILES))/$(TOTAL_FILES)]$(NOCOLOR) Compiling $<\r"
+	@mkdir -p $(dir $@)  # Create the directory if it doesn't exist
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@$(eval PROGRESS := $(shell echo $$(($(PROGRESS) + 1))))
+	@$(eval PERCENT := $(shell echo $$(($(PROGRESS) * 100 / $(TOTAL_FILES)))))
+	@$(eval BAR := $(shell echo $$(($(PROGRESS) * $(BAR_LENGTH) / $(TOTAL_FILES)))))
+	@$(eval REST := $(shell echo $$(($(BAR_LENGTH) - $(BAR)))))
+	@echo -n "\r\033[K"  # Clear the line
+	@echo -n "$(CYAN)["  # Start the bar
+
+	@for i in `seq 1 $(BAR)`; do \
+		echo -n $(BAR_SYMBOL); \
+	done
+
+
+	@echo -n "] $(PERCENT)% $(RED)Compiling:$(NOCOLOR) $<"
+	@sleep 0.1  # Just to make the bar smooth
 
 # Rule to compile the included library
 $(LIBS):
@@ -63,10 +69,13 @@ $(LIBS):
 	@echo "$(GREEN)Library built successfully.$(NOCOLOR)"
 
 # Rule to compile the project
-$(NAME): $(OBJ_DIR) $(OBJ_FILES)
-	@echo "$(YELLOW)Building project...$(NOCOLOR)"
-	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -lreadline -L$(LIB_DIR) -lft -o $(NAME)
-	@echo "$(GREEN)Project built successfully.$(NOCOLOR)"
+$(NAME): $(OBJ_FILES)
+	@echo ""
+	@echo "$(YELLOW)Creating $(NAME)..."
+	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -o $(NAME) $(LIBS)
+	@sleep 0.2 # Just to let the loading bar finish smoothly
+	@echo -n "\r\033[K" # Erase the loading bar
+	@echo "$(GREEN)$(NAME) created successfully.$(NOCOLOR)"
 
 # build only the library
 libs: $(LIBS)

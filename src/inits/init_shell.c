@@ -6,7 +6,7 @@
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:08:04 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/18 22:10:55 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/30 20:15:09 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ t_shell	*init_shell(char **env)
 	// initialize the file descriptors
 	// initialize the commands
 	ft_printf("Shell initialized\n");
+    ft_print_harambe();
 	return (shell);
 }

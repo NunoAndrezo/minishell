@@ -6,7 +6,7 @@
 /*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:09:42 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/18 22:24:26 by joamiran         ###   ########.fr       */
+/*   Updated: 2024/12/30 16:31:24 by joamiran         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,35 +14,36 @@
 
 void	run_shell(t_shell *shell)
 {
-    //setup the signal handler
-    setup_signals();
-
+	// setup the signal handler
+	setup_signals();
 	// for now it just starts the shell
 	while (1)
 	{
 		// read the input
 		shell->line = readline(PROMPT);
-
-        if (!shell->line)
-        {
-            ft_printf("exiting\n");
-            exit_shell(shell);
-        }
-	
-        // print the input
+		if (!shell->line)
+			exit_shell(shell);
 		if (shell->line)
 		{
-            // if the input is "exit" then break the loop
-			if (ft_strcmp(shell->line, "exit") == 0)
-                exit_shell(shell);
-            
-            if (ft_strcmp(shell->line, "env") == 0)
-                print_env(shell->env);
-            // print the input and the number of letters
-			ft_printf("line goes brrrrrr \n");
-
-			// free the input
-			free(shell->line);
+			parse(shell); // parse the line and tokens
+			if (shell->tokens)
+			{
+                // check the validity of the command
+               // if (validate_command(shell->tokens)
+               // {
+               //     // execute the command
+               //     //execute_command(shell);
+               // }
+               // else
+               // {
+               //     // print an error message
+               //     ft_putstr_fd("minishell: command not found: ", 2);
+               //     ft_putstr_fd(shell->tokens->content, 2);
+               //     ft_putstr_fd("\n", 2);
+               // }
+				free_tokens(shell->tokens); // free the tokens
+				free(shell->line);
+			}
 		}
 	}
 }

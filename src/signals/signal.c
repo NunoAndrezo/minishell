@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 01:05:05 by nuno              #+#    #+#             */
-/*   Updated: 2024/12/18 18:34:46 by joamiran         ###   ########.fr       */
+/*   Updated: 2025/01/06 21:50:04 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,27 @@ void	setup_signals(void)
 {
 	struct sigaction	sa;
 
-	sa.sa_sigaction = siginfo_handler; // Set handler with SA_SIGINFO
-	sigemptyset(&sa.sa_mask);
+	// Ignore SIGQUIT (Ctrl+\) to prevent core dump
+	signal(SIGQUIT, SIG_IGN);
+	
+    
+	sa.sa_sigaction = siginfo_handler; // Use sa_sigaction instead of sa_handler
+	
+	sigemptyset(&sa.sa_mask); // Block all signals while in the handler
 	sa.sa_flags = SA_SIGINFO; // Use SA_SIGINFO to get detailed info
-	sigaction(SIGINT, &sa, NULL);
-	sigaction(SIGQUIT, &sa, NULL);
+	sigaction(SIGINT, &sa, NULL); // Handle SIGINT
 }
 
 void	siginfo_handler(int sig, siginfo_t *info, void *context)
 {
 	// aqui adicionas o que quiseres para o minishell
-	context = NULL;
+	(void)context;
 	if (sig == SIGINT)
-		// ft_printf("\nCaught SIGINT (Ctrl+C) from PID: %d\n", info->si_pid);
-		new_prompt();
+		new_prompt(); // Print new prompt
 	else if (sig == SIGQUIT)
-		ft_printf("\nCaught SIGQUIT (Ctrl+\\) from PID: %d\n", info->si_pid);
+		ft_printf("\nCaught SIGQUIT (Ctrl+\\) - Ignored\n"); // Ignore SIGQUIT (Ctrl+\)
 	else if (sig == SIGTSTP)
-		ft_printf("\nCaught SIGSTP (Ctrl+Z) - Ignored\n");
+		ft_printf("\nCaught SIGSTP (Ctrl+Z) - Ignored\n"); // Ignore SIGTSTP (Ctrl+Z)
 	else
 		ft_printf("\nCaught signal %d from PID: %d\n", sig, info->si_pid);
 }
