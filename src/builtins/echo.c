@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 13:21:44 by nuno              #+#    #+#             */
-/*   Updated: 2025/01/09 03:23:35 by nuno             ###   ########.fr       */
+/*   Updated: 2025/01/13 20:37:36 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void echo_shell(t_cmd *cmd)
 	{
 		ft_putstr_fd(cmd->args[i], STDOUT_FILENO);
 		if (cmd->args[i + 1])
-		ft_putchar_fd(' ', STDOUT_FILENO);
+			ft_putchar_fd(' ', STDOUT_FILENO);
 		i++;
 	}
 	if (newline)
