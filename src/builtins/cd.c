@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 23:04:45 by nuno              #+#    #+#             */
-/*   Updated: 2025/01/09 03:06:52 by nuno             ###   ########.fr       */
+/*   Updated: 2025/01/13 20:37:10 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 void cd_shell(t_cmd *cmd, t_env *env)
 {
-	char *path;
-	char cwd[PATH_MAX];
+	char		*path;
+	char		cwd[PATH_MAX];
+	t_env_var	*oldpwd;
+	t_env_var	*pwd;
 
 	path = NULL;
 	if (!cmd->args[1]) // No argument: go to $HOME
@@ -38,8 +40,8 @@ void cd_shell(t_cmd *cmd, t_env *env)
 		if (getcwd(cwd, sizeof(cwd)))
 		{
 		// Update PWD and OLDPWD environment variables
-		t_env_var *oldpwd = find_env_var(env, "OLDPWD");
-		t_env_var *pwd = find_env_var(env, "PWD");
+		oldpwd = find_env_var(env, "OLDPWD");
+		pwd = find_env_var(env, "PWD");
 		if (oldpwd)
 			free(oldpwd->value), oldpwd->value = ft_strdup(pwd ? pwd->value : "");
 		if (pwd)
