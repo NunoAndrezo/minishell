@@ -1,18 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ls??.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 18:20:04 by joamiran          #+#    #+#             */
-/*   Updated: 2025/01/09 02:48:36 by nuno             ###   ########.fr       */
+/*   Created: 2025/01/09 02:12:10 by nuno              #+#    #+#             */
+/*   Updated: 2025/01/09 03:30:13 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void exit_shell(t_shell *shell)
+void ls_shell(t_cmd *cmd)
 {
-    clean_exit(shell);
-} 
+	pid_t pid;
+
+	pid = fork();
+	if (pid == 0) // Child process
+	{
+		char *path = "/bin/ls"; // Hardcoded path to `ls` binary
+		if (execve(path, cmd->args, NULL) == -1)
+		{
+		perror("ls error");
+		exit(EXIT_FAILURE);
+		}
+	}
+	else if (pid > 0) // Parent process
+	{
+		wait(NULL); // Wait for child to finish
+	}
+	else
+	{
+		perror("fork error");
+	}
+}

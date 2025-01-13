@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   copy_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 20:18:13 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/18 22:09:16 by joamiran         ###   ########.fr       */
+/*   Updated: 2025/01/09 03:25:14 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,3 @@ t_env	*copy_env(char **env)
     }
     return (env_cpy);  // Return the t_env list
 }
-
