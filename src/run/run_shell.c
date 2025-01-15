@@ -6,7 +6,11 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:09:42 by joamiran          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/01/09 04:23:04 by nuno             ###   ########.fr       */
+=======
+/*   Updated: 2025/01/03 17:55:14 by joamiran         ###   ########.fr       */
+>>>>>>> develop
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +34,19 @@ void	run_shell(t_shell *shell)
 			{
 			//???	execute_command(shell->cmds, shell); // execute the command
                 // check the validity of the command
+                if (strcmp(shell->tokens[0], "exit") == 0)
+                {
+                    exit_shell(shell);
+                }
+                else if (strcmp(shell->tokens[0], "env") == 0)
+                {
+                   print_env(shell->env);
+                }
+                else if (strcmp(shell->tokens[0], "unset") == 0)
+                {
+                    unset_vars(shell, shell->tokens + 1);
+                }
+               // check the validity of the command
                // if (validate_command(shell->tokens)
                // {
                //     // execute the command
