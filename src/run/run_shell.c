@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   run_shell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:09:42 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/30 16:31:24 by joamiran         ###   ########.fr       */
+/*   Updated: 2025/01/09 04:23:04 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	run_shell(t_shell *shell)
 			parse(shell); // parse the line and tokens
 			if (shell->tokens)
 			{
+			//???	execute_command(shell->cmds, shell); // execute the command
                 // check the validity of the command
                // if (validate_command(shell->tokens)
                // {

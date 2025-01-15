@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 18:20:04 by joamiran          #+#    #+#             */
-/*   Updated: 2025/01/09 02:48:36 by nuno             ###   ########.fr       */
+/*   Created: 2025/01/06 22:57:29 by nuno              #+#    #+#             */
+/*   Updated: 2025/01/09 03:07:18 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void exit_shell(t_shell *shell)
+void pwd_shell()
 {
-    clean_exit(shell);
-} 
+	char cwd[PATH_MAX];
+	
+	if (getcwd(cwd, sizeof(cwd)))
+		ft_putendl_fd(cwd, STDOUT_FILENO);
+	else
+		perror("getcwd() error");
+}

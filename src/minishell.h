@@ -6,7 +6,7 @@
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 18:01:28 by joamiran          #+#    #+#             */
-/*   Updated: 2025/01/06 22:03:30 by nuno             ###   ########.fr       */
+/*   Updated: 2025/01/13 20:42:26 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "../inc/lib_ft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -29,6 +30,13 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+
+# ifndef PATH_MAX
+#  define PATH_MAX 4096 
+// Maximum number of bytes in a pathname
+//Typical maximum path length in many systems
+// getconf PATH_MAX / to determine the actual limit for your system.
+# endif
 
 # define monke "\U0001F648"
 
@@ -71,7 +79,7 @@ typedef struct cmd
 {
 	char *name;                 // command name
 	char **args;                // arguments
-	char *path;                 // path to the command
+	char *path;                 // path to the command, precisamos disto?se so usamos exclusivamente os builtins ja predefinidos.
 
 	struct cmd *next;           // next command
 	struct cmd *prev;           // previous command
@@ -115,7 +123,7 @@ typedef struct shell
 	char *line;                 // line read from the input
 	char *history_file;         // file to store the history
 
-    char **tokens;              // tokens from the line
+	char **tokens;              // tokens from the line
 
 	int ret;                    // return value
 	int status;                 // status of the shell
@@ -146,27 +154,10 @@ char **split_with_quotes(char *line);   // function to split the line with quote
 int count_quotes(char *line);           // function to count the number of quotes
 char    **ft_parse_split(char *line);   // function to split the line into tokens
 
-// execute.c
-
 // signals.c
 void    setup_signals(void);                                        // function to setup the signals
 void    siginfo_handler(int sig, siginfo_t *info, void *context);   // function to handle the signals
 
-
-// builtins.c
-void    exit_shell(t_shell *shell);                                 // function to exit the shell
-
-// unset
-t_env_var   *find_env_var(t_env *env, char *key);                   // function to find an environment variable
-void    remove_env_var(t_env *env, char *key);                      // function to remove an environment variable
-void    unset_env_var(t_shell *shell, char *key);                   // function to unset an environment variable
-void    unset_vars(t_shell *shell, char **keys);                    // function to unset multiple environment variables
-
-
-// env.c
-void	assign_env_var(t_env_var *env_var, char *env);      // function to assign an environment variable
-void	add_env_var(t_env **env);                           // function to add an environment variable
-t_env	*copy_env(char **env);                              // function to copy the environment
 // path.c
 
 // here_doc.c
@@ -195,8 +186,25 @@ void	clean_exit(t_shell *shell);         // function to exit the shell
 // debug.c
 void    print_env(t_env *env);              // function to print the environment
 
+// execute_command.c
+void execute_command(t_cmd *cmd, t_shell *shell);    // function to execute the command
 
-// exit.c
+// builtins
+void	cd_shell(t_cmd *cmd, t_env *env);   // function to change the directory
+void	echo_shell(t_cmd *cmd);             // function to print the arguments
+void	pwd_shell(void);                    // function to print the current directory
+void	export_shell(t_cmd *cmd, t_env *env); // function to export an environment variable
 void	exit_shell(t_shell *shell);         // function to exit the shell
+// unset
+t_env_var	*find_env_var(t_env *env, char *key);       // function to find an environment variable
+void		remove_env_var(t_env *env, char *key);          // function to remove an environment variable
+void		unset_env_var(t_shell *shell, char *key);     // function to unset an environment variable
+void		unset_vars(t_shell *shell, char **keys);       // function to unset multiple environment variables
+// env.c
+void	assign_env_var(t_env_var *env_var, char *env);      // function to assign an environment variable
+void	add_env_var(t_env **env);                           // function to add an environment variable
+t_env	*copy_env(char **env);                              // function to copy the environment
+// ls.c
+void	ls_shell(t_cmd *cmd);                // function to list the files in the directory
 
 #endif

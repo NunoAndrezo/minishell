@@ -17,7 +17,7 @@ CC = cc
 
 # Flags
 CFLAGS = -Wall -Wextra -Werror -g
-POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -L/usr/lib -lreadline -lncurses
+POSTCC = -I $(INC_DIR) -I $(LIB_DIR) -L/usr/lib/x86_64-linux-gnu -L/usr/lib -lreadline -lncurses
 
 # Directories
 SRC_DIR = ./src
@@ -72,7 +72,7 @@ $(LIBS):
 $(NAME): $(OBJ_FILES)
 	@echo ""
 	@echo "$(YELLOW)Creating $(NAME)..."
-	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -o $(NAME) $(LIBS)
+	@$(CC) $(CFLAGS) $(POSTCC) $(OBJ_FILES) -o $(NAME) -L/usr/lib/x86_64-linux-gnu -lreadline -lncurses $(LIBS)
 	@sleep 0.2 # Just to let the loading bar finish smoothly
 	@echo -n "\r\033[K" # Erase the loading bar
 	@echo "$(GREEN)$(NAME) created successfully.$(NOCOLOR)"
