@@ -1,18 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 18:20:04 by joamiran          #+#    #+#             */
-/*   Updated: 2025/01/09 02:48:36 by nuno             ###   ########.fr       */
+/*   Created: 2025/01/07 13:21:44 by nuno              #+#    #+#             */
+/*   Updated: 2025/01/13 20:37:36 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void exit_shell(t_shell *shell)
+void echo_shell(t_cmd *cmd)
 {
-    clean_exit(shell);
-} 
+	int newline;
+	int i;
+
+	newline = 1;
+	i = 1;
+	if (cmd->args[1] && ft_strcmp(cmd->args[1], "-n") == 0)
+	{
+		newline = 0; // Suppress newline
+		i++;
+	}
+	while (cmd->args[i])
+	{
+		ft_putstr_fd(cmd->args[i], STDOUT_FILENO);
+		if (cmd->args[i + 1])
+			ft_putchar_fd(' ', STDOUT_FILENO);
+		i++;
+	}
+	if (newline)
+		ft_putchar_fd('\n', STDOUT_FILENO);
+}
