@@ -1,52 +1,57 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parsing_1.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/19 18:07:52 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/19 19:42:12 by joamiran         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
-#include "../minishell.h"
+#include "ft_parsing.h"
 
 // parsing the line into tokens
-void	parse_line(t_shell *shell)
+char	**parse_line(char *line, int letter, int sub)
 {
-    char **tokens;
+	char	**tokens;
 
-    if (!shell->line)
-        return ;
-    tokens = ft_parse_split(shell->line);
-    if (!tokens)
-        return ;
-
-    shell->tokens = tokens; 
+	if (!line)
+		return (NULL);
+	tokens = ft_parse_split(line, letter, sub);
+	if (!tokens)
+		return (NULL);
+	return (tokens);
 }
 
-
-// parsing to make tokens so we can later parse the tokens into commands
-void	parse_tokens(t_shell *shell) // this function is not complete
+// print the tokens
+void	print_tokens(t_shell *shell)
 {
-    // for now it just prints the tokens
-    int i;
+	int	i;
 
-    i = 0;
-    while (shell->tokens[i])
-    {
-        ft_printf("Token %d: %s\n", i, shell->tokens[i]);
-        i++;
-    }
+	i = 0;
+	if (!shell || !shell->tokens)
+		return ;
+	if (shell->tokens[0] == NULL)
+	{
+		ft_printf(RED "No tokens found\n" RESET);
+		return ;
+	}
+	while (shell->tokens[i])
+	{
+		ft_printf(GREEN "token" RESET " [ " RED "%d" RESET " ] --> %s\n", i,
+			shell->tokens[i]);
+		i++;
+	}
 }
 
-// parse the line and tokens
-void	parse(t_shell *shell)
+// check if the redirection is valid
+bool	check_redir_validity(t_shell *shell)
 {
-    parse_line(shell);          // parse the line
-    if (shell->tokens)
-        parse_tokens(shell);    // parse the tokens
-    else
-        ft_printf_fd(2, "Error"); // print error message
+	t_cmd	*tmp;
+
+	tmp = shell->cmds;
+	while (tmp)
+	{
+		if (tmp->fd_struct != NULL)
+		{
+			if (tmp->fd_struct->file == NULL)
+			{
+				ft_printf(RED REDIR_FAILURE " %s\n" RESET, tmp->name);
+				return (false);
+			}
+		}
+		tmp = tmp->next;
+	}
+	return (true);
 }

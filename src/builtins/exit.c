@@ -5,14 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 18:20:04 by joamiran          #+#    #+#             */
-/*   Updated: 2025/01/09 02:48:36 by nuno             ###   ########.fr       */
+/*   Created: 2025/05/30 02:15:08 by nuno              #+#    #+#             */
+/*   Updated: 2025/05/30 02:15:08 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "ft_builtins.h"
 
-void exit_shell(t_shell *shell)
+void	exit_shell(t_cmd *cmd, t_shell *shell)
 {
-    clean_exit(shell);
-} 
+	(void)cmd;
+	if (!shell->is_child)
+		shell->exit_value = 0;
+	clean_exit(&shell);
+}

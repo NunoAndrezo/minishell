@@ -3,66 +3,70 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 01:05:05 by nuno              #+#    #+#             */
-/*   Updated: 2025/01/06 22:59:32 by nuno             ###   ########.fr       */
+/*   Created: 2025/05/30 17:36:06 by nneves-a          #+#    #+#             */
+/*   Updated: 2025/05/30 20:20:46 by nneves-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "ft_signal.h"
 
-void	siginfo_handler(int sig, siginfo_t *info, void *context);
+static void	siginfo_handler(int sig, siginfo_t *info, void *context);
+static void	siginfo_handler_heredoc(int sig, siginfo_t *info, void *context);
 
-void	setup_signals(void)
+t_sig	*t_pid(void)
+{
+	static t_sig	pid;
+
+	return (&pid);
+}
+
+void	setup_signals(t_shell *shell)
 {
 	struct sigaction	sa;
 
-	// Ignore SIGQUIT (Ctrl+\) to prevent core dump
+	(void)shell;
 	signal(SIGQUIT, SIG_IGN);
-	
-    
-	sa.sa_sigaction = siginfo_handler; // Use sa_sigaction instead of sa_handler
-	
-	sigemptyset(&sa.sa_mask); // Block all signals while in the handler
-	sa.sa_flags = SA_SIGINFO; // Use SA_SIGINFO to get detailed info
-	sigaction(SIGINT, &sa, NULL); // Handle SIGINT
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	sa.sa_sigaction = siginfo_handler;
+	sigaction(SIGINT, &sa, NULL);
 }
 
-void	siginfo_handler(int sig, siginfo_t *info, void *context)
+static void	siginfo_handler(int sig, siginfo_t *info, void *context)
 {
-	// aqui adicionas o que quiseres para o minishell
 	(void)context;
+	(void)info;
 	if (sig == SIGINT)
-		new_prompt(); // Print new prompt
-	else if (sig == SIGQUIT)
-		ft_printf("\nCaught SIGQUIT (Ctrl+\\) - Ignored\n"); // Ignore SIGQUIT (Ctrl+\)
-	else if (sig == SIGTSTP)
-		ft_printf("\nCaught SIGSTP (Ctrl+Z) - Ignored\n"); // Ignore SIGTSTP (Ctrl+Z)
-	else
-		ft_printf("\nCaught signal %d from PID: %d\n", sig, info->si_pid);
+	{
+		t_pid()->status = 130;
+		new_prompt();
+	}
 }
 
-/* Handling the Signals
+void	setup_signals_heredoc(t_shell *shell)
+{
+	struct sigaction	sa;
 
-Here’s how to handle the required signals:
-Signals to Handle
+	(void)shell;
+	signal(SIGQUIT, SIG_DFL);
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	sa.sa_sigaction = siginfo_handler_heredoc;
+	sigaction(SIGINT, &sa, NULL);
+}
 
-	SIGINT (Ctrl+C):
-		Interrupts the current process.
-		it should interrupt the current command input or running child process
-
-	SIGQUIT (Ctrl+):
-		Sends a quit signal. Typically terminates the process and creates a core dump.
-		ignore it while idle or allow child processes to handle it.
-
-	SIGTSTP (Ctrl+Z):
-		Suspends the foreground process.
-		you might need to handle job control (advanced feature) or just ignore it for simplicity.
-
-	SIGCHLD:
-		Signals that a child process has terminated or changed state.
-		use it to clean up zombie processes.
-
-	Ctrl+D (EOF):
-		Should gracefully terminate the process by checking EOF on input. */
+static void	siginfo_handler_heredoc(int sig, siginfo_t *info, void *context)
+{
+	(void)context;
+	(void)info;
+	if (sig == SIGINT)
+	{
+		t_pid()->status = 130;
+		close(t_pid()->shull->status);
+		if (t_pid()->shull->is_pipe)
+			close_pipes(t_pid()->shull->cmds);
+		clean_exit(&t_pid()->shull);
+	}
+}

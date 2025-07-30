@@ -1,21 +1,10 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   newline.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: joamiran <joamiran@student.42lisboa.com>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/18 17:51:30 by joamiran          #+#    #+#             */
-/*   Updated: 2024/12/30 19:57:24 by joamiran         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "ft_utils.h"
 
-#include "../minishell.h"
-
+// function to print a newline and reset the prompt
 void	new_prompt(void)
 {
-    ft_printf("\n");
-    rl_on_new_line();
-    rl_replace_line("", 14);
-    rl_redisplay();
+	ft_printf_fd(STDOUT_FILENO, "\n");
+	rl_on_new_line();
+	rl_replace_line("", 14);
+	rl_redisplay();
 }
