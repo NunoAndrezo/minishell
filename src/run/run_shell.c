@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_shell.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:17:05 by joao              #+#    #+#             */
+/*   Updated: 2025/06/01 17:22:21 by joao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_run.h"
 
 // function to run the shell in debug mode
@@ -16,7 +28,6 @@ void	run_shell_debug(t_shell *shell)
 			add_history(shell->line);
 			parse(shell);
 			run_commands(shell);
-			//setup_signals(shell);
 			if (shell->tokens)
 			{
 				free_tokens(shell->tokens);
@@ -30,7 +41,7 @@ void	run_shell_debug(t_shell *shell)
 }
 
 // wrapper for running the shell commands
-static void	minishellers(t_shell *shell)
+void	minishellers(t_shell *shell)
 {
 	if (!shell->line || !(*shell->line))
 		return ;
@@ -45,42 +56,6 @@ static void	minishellers(t_shell *shell)
 	flush_commands(shell);
 	free(shell->line);
 	shell->is_pipe = false;
-}
-
-// function to run the shell
-void	run_shell(t_shell *shell)
-{
-	char	*pwd;
-	char	*aux;
-	char	*cwd;
-
-	pwd = NULL;
-	while (1)
-	{
-		cwd = getcwd(NULL, 0);
-		aux = ft_strjoin(BLUE, cwd);
-		pwd = ft_strjoin(aux, RESET "\n" PROMPT);
-		free(aux);
-		free(cwd);
-		shell->line = readline(pwd);
-		free(pwd);
-		if (t_pid()->status == 130)
-		{
-			shell->exit_value = 130;
-			t_pid()->status = 0;
-		}
-		if (shell->line && ft_strlen(shell->line) > MAX_LINE_LENGTH)
-		{
-			ft_printf_fd(STDERR_FILENO, TOO_LONG_LINE "%d\n", MAX_LINE_LENGTH);
-			free(shell->line);
-			continue ;
-		}
-		if (!shell->line)
-			exit_shell(&(t_cmd){0}, shell);
-		else
-			minishellers(shell);
-
-	}
 }
 
 // function to set up signal handling

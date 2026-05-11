@@ -1,4 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   run_cmds.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:17:09 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 20:35:06 by nneves-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_run.h"
+
+static void	waiting_for_signal_value(t_shell *shell, int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			ft_putstr_fd("\n", STDERR_FILENO);
+		else if (WTERMSIG(status) == SIGQUIT)
+			ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
+		shell->exit_value = 128 + WTERMSIG(status);
+	}
+	else if (WIFEXITED(status))
+		shell->exit_value = WEXITSTATUS(status);
+}
 
 // function to wait for all commands to finish
 void	wait_commands(t_shell *shell)
@@ -13,34 +39,15 @@ void	wait_commands(t_shell *shell)
 	{
 		if (tmp->pid > 0)
 		{
+			signal(SIGINT, SIG_IGN);
+			signal(SIGQUIT, SIG_IGN);
 			waitpid(tmp->pid, &status, 0);
-			if (WIFSIGNALED(status))
-			{
-				if (WTERMSIG(status) == SIGINT)
-					ft_putstr_fd("\n", STDERR_FILENO);
-				else if (WTERMSIG(status) == SIGQUIT)
-					ft_putstr_fd("Quit (core dumped)\n", STDERR_FILENO);
-				shell->exit_value = 128 + WTERMSIG(status);
-			}
-			else if (WIFEXITED(status))
-				shell->exit_value = WEXITSTATUS(status);
+			waiting_for_signal_value(shell, status);
 		}
 		tmp = tmp->next;
 	}
 	setup_signals(shell);
 }
-
-// function to handle invalid commands
-// static void	handle_invalid_command(t_cmd *cmd, t_shell *shell)
-// {
-// 	if (cmd->fd_struct)
-// 		close_fds(cmd);
-// 	else if (cmd->args && cmd->args[0] && cmd->name)
-// 	{
-// 		ft_printf_fd(STDERR_FILENO, "%s command: not found\n", cmd->args[0]);
-// 		shell->exit_value = 127;
-// 	}
-// }
 
 // function to run commands in the shell
 void	run_commands(t_shell *shell)
@@ -57,11 +64,9 @@ void	run_commands(t_shell *shell)
 	{
 		i = setup_redirections(tmp, shell);
 		if (i == 1 || i == 130)
-			return(shell->exit_value = i , (void) i);
+			return (shell->exit_value = i, (void)i);
 		if (tmp->is_valid)
 			processor(tmp, shell);
-		// else
-		// 	handle_invalid_command(tmp, shell);
 		close_cmd_redirs(tmp);
 		tmp = tmp->next;
 	}

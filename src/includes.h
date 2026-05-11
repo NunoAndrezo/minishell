@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   includes.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 18:24:01 by nneves-a          #+#    #+#             */
-/*   Updated: 2025/05/30 18:24:02 by nneves-a         ###   ########.fr       */
+/*   Updated: 2025/06/01 17:24:59 by joao             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 # define INCLUDES_H
 
 // headers from system libraries
+# include <ctype.h>
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <limits.h>
@@ -25,6 +27,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/signal.h>
 # include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
@@ -44,7 +47,6 @@
 # include "builtins/ft_builtins.h"
 # include "cmd_as_regular_user/ft_cmd_as_regular_user.h"
 # include "debugging/ft_debug.h"
-# include "dirent.h"
 # include "env/ft_env.h"
 # include "frees/ft_free.h"
 # include "history/ft_history.h"

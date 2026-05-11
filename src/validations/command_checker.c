@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_checker.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:18:26 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 18:09:23 by nneves-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_validations.h"
 
 // function to check if a file exists and is accessible
@@ -28,6 +40,8 @@ char	*checkforpath(char *cmd, t_env *env)
 	char		**paths;
 	char		*full_cmd;
 
+	if (ft_valid_pather(cmd) == false)
+		return (NULL);
 	tmp = find_env_var(env, "PATH");
 	if (!tmp || !tmp->value || !tmp->value[0])
 		return (NULL);
@@ -47,7 +61,6 @@ char	*checkforpath(char *cmd, t_env *env)
 	free_split(paths);
 	return (NULL);
 }
-
 
 // check if command sent is in path format
 // ex: /bin/ls

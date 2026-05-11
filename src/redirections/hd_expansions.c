@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   hd_expansions.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 17:52:30 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 19:51:09 by nneves-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "redirections.h"
 
 // function to check if the line has any expansion
@@ -29,10 +41,9 @@ bool	has_expansion(char *line)
 // function to free the allocated memory for the line, arg, and tmp
 static void	free_wrapper(char *line, char *arg, t_cmd *tmp)
 {
+	(void)arg;
 	if (line)
 		free(line);
-	if (arg)
-		free(arg);
 	if (tmp)
 		free(tmp);
 }

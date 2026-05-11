@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joamiran <joamiran@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/30 20:56:36 by nneves-a          #+#    #+#             */
+/*   Updated: 2025/06/02 16:54:07 by joamiran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 // function to check if the arguments passed to minishell are valid
@@ -35,5 +47,6 @@ int	main(int argc, char **argv, char **env)
 	else
 		shell->debug = 0;
 	shelling(shell);
+	clean_exit(&shell);
 	return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_run.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joamiran <joamiran@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:17:12 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 16:53:45 by joamiran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_RUN_H
 # define FT_RUN_H
 
@@ -11,9 +23,6 @@ void	run_shell_debug(t_shell *shell);
 
 // function to print harambe
 void	ft_print_harambe(void);
-
-// function to print minishell
-void	ft_print_minishell(void);
 
 // function to shell
 void	shelling(t_shell *shell);
@@ -38,5 +47,11 @@ void	wait_commands(t_shell *shell);
 
 // function to close all file descriptors
 void	close_fds(t_cmd *cmd);
+
+// function to run a builtin command
+void	run_builtin_cmd(t_cmd *cmd, t_shell *shell);
+
+// wrapper for running the shell commands
+void	minishellers(t_shell *shell);
 
 #endif

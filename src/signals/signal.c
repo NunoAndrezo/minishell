@@ -6,14 +6,16 @@
 /*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 17:36:06 by nneves-a          #+#    #+#             */
-/*   Updated: 2025/05/30 20:20:46 by nneves-a         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:49:40 by nneves-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_signal.h"
+#include <sys/ioctl.h>
 
 static void	siginfo_handler(int sig, siginfo_t *info, void *context);
 static void	siginfo_handler_heredoc(int sig, siginfo_t *info, void *context);
+//static void	clean_exit_heredoc(t_shell **shell);
 
 t_sig	*t_pid(void)
 {
@@ -40,7 +42,7 @@ static void	siginfo_handler(int sig, siginfo_t *info, void *context)
 	(void)info;
 	if (sig == SIGINT)
 	{
-		t_pid()->status = 130;
+		t_pid()->exit_value = 130;
 		new_prompt();
 	}
 }
@@ -49,8 +51,8 @@ void	setup_signals_heredoc(t_shell *shell)
 {
 	struct sigaction	sa;
 
-	(void)shell;
-	signal(SIGQUIT, SIG_DFL);
+	t_pid()->shull = shell;
+	signal(SIGQUIT, SIG_IGN);
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = SA_SIGINFO | SA_RESTART;
 	sa.sa_sigaction = siginfo_handler_heredoc;
@@ -63,10 +65,7 @@ static void	siginfo_handler_heredoc(int sig, siginfo_t *info, void *context)
 	(void)info;
 	if (sig == SIGINT)
 	{
-		t_pid()->status = 130;
-		close(t_pid()->shull->status);
-		if (t_pid()->shull->is_pipe)
-			close_pipes(t_pid()->shull->cmds);
-		clean_exit(&t_pid()->shull);
+		t_pid()->shull->exit_value = 130;
+		rl_done = 1;
 	}
 }

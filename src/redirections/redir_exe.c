@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redir_exe.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:09:36 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 17:49:52 by nneves-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "redirections.h"
 
 // function to close the specific pipes
@@ -15,13 +27,11 @@ void	close_cmd_redirs(t_cmd *cmd)
 {
 	t_fd	*tmp;
 
-
 	if (!cmd->fd_struct)
 		return ;
 	tmp = cmd->fd_struct;
 	if (!tmp)
 		return ;
-	
 	while (tmp)
 	{
 		if (tmp->fd != -1)
@@ -40,30 +50,49 @@ void	close_cmd_redirs(t_cmd *cmd)
 	close_specific_pipe(cmd);
 }
 
+// function to update the last input and output redirections
+static void	update_last_in_out(t_fd *redir, t_fd **in, t_fd **out)
+{
+	if (redir->type == REDIR_IN || redir->type == HERE_DOC_)
+		*in = redir;
+	else if (redir->type == REDIR_OUT || redir->type == REDIR_APPEND)
+		*out = redir;
+}
+
+// function to handle all redirections in a command
+static int	handle_all_redirs(t_cmd *cmd, t_shell *shell, t_fd **last_in,
+		t_fd **last_out)
+{
+	t_fd	*tmp;
+	int		status;
+
+	tmp = cmd->fd_struct;
+	while (tmp)
+	{
+		status = handle_redirections(tmp, shell);
+		if (status == 1 || status == 130)
+			return (status);
+		update_last_in_out(tmp, last_in, last_out);
+		tmp = tmp->next;
+		shell->exit_value = 0;
+	}
+	return (0);
+}
+
 // function to set up the redirections for a command
 int	setup_redirections(t_cmd *cmd, t_shell *shell)
 {
-	t_fd	*tmp;
 	t_fd	*last_in;
 	t_fd	*last_out;
-	int		i;
+	int		status;
 
 	if (!cmd || !cmd->fd_struct)
 		return (0);
-	tmp = cmd->fd_struct;
 	last_in = NULL;
 	last_out = NULL;
-	while (tmp)
-	{
-		i = handle_redirections(tmp, shell);
-		if (i == 1 || i == 130)
-			return (i);
-		if (tmp->type == REDIR_IN || tmp->type == HERE_DOC_)
-			last_in = tmp;
-		else if (tmp->type == REDIR_OUT || tmp->type == REDIR_APPEND)
-			last_out = tmp;
-		tmp = tmp->next;
-	}
+	status = handle_all_redirs(cmd, shell, &last_in, &last_out);
+	if (status != 0)
+		return (status);
 	if (last_in && last_in->fd != -1)
 		cmd->fd[0] = last_in->fd;
 	if (last_out && last_out->fd != -1)

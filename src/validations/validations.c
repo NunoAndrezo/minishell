@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   validations.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:18:34 by joao              #+#    #+#             */
+/*   Updated: 2025/06/01 18:13:38 by joao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_validations.h"
 
 // Check if the command is empty
@@ -32,5 +44,20 @@ bool	validate_command(char *command)
 		return (false);
 	if (!is_builtin(command))
 		return (false);
+	return (true);
+}
+
+// Check if the string contains only quotes
+bool	is_all_quotes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != '\'' && str[i] != '\"')
+			return (false);
+		i++;
+	}
 	return (true);
 }

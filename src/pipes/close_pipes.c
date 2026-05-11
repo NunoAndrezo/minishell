@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   close_pipes.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 17:51:46 by joao              #+#    #+#             */
+/*   Updated: 2025/06/01 18:09:23 by joao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_pipes.h"
 
 // close pipes safely
@@ -6,6 +18,7 @@ void	close_safe(int fd)
 	if (fd != -1)
 		close(fd);
 }
+
 // function to close pipes after forking (parent closes unused ends)
 void	close_pipes_after_fork(t_cmd *cmd)
 {

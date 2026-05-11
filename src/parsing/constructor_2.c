@@ -1,4 +1,40 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   constructor_2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 17:19:21 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 18:33:21 by nneves-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_parsing.h"
+
+bool	is_all_slashes(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != '/')
+			return (false);
+		i++;
+	}
+	return (true);
+}
+
+// function to check if a command is a valid path
+bool	ft_valid_pather(char *cmd)
+{
+	if (ft_strcmp(cmd, ".") == 0 || ft_strcmp(cmd, "..") == 0)
+		return (false);
+	if (is_all_slashes(cmd) == true)
+		return (false);
+	return (true);
+}
 
 // function to create a new t_cmd
 t_cmd	*init_cmd(char *name, char **args)
@@ -17,9 +53,9 @@ t_cmd	*init_cmd(char *name, char **args)
 	cmd->prev = NULL;
 	cmd->fd_pipe[0] = -1;
 	cmd->fd_pipe[1] = -1;
-	cmd->fd[0] = STDIN_FILENO;
-	cmd->fd[1] = STDOUT_FILENO;
-	cmd->fd[2] = STDERR_FILENO;
+	cmd->fd[0] = -1;
+	cmd->fd[1] = -1;
+	cmd->fd[2] = -1;
 	cmd->fd_struct = NULL;
 	cmd->redirs = NULL;
 	cmd->is_valid = false;
@@ -30,7 +66,7 @@ t_cmd	*init_cmd(char *name, char **args)
 }
 
 // function to process the command arguments
-static void	cmd_processor_a(t_cmd *cmd, t_shell *shell, int i)
+void	cmd_processor_a(t_cmd *cmd, t_shell *shell, int i)
 {
 	int	redir_check;
 
@@ -51,92 +87,14 @@ static void	cmd_processor_a(t_cmd *cmd, t_shell *shell, int i)
 	}
 }
 
-static t_cmd	*invalid_exit(t_cmd *cmd, t_shell *shell)
+// function to check if a file exists and is a regular file
+bool	check_file(char *cmd)
 {
-	shell->exit_value = 1;
-	if (ft_strcmp(cmd->name, "kekers") != 0)
-		ft_printf_fd(STDERR_FILENO, "minishell: invalid command: %s\n", cmd->name);
-	return (cmd);
-}
+	struct stat	st;
 
-// function to check if a file exists and is a regular file 
-bool check_file(char *cmd)
-{
-	struct stat st;
 	if (stat(cmd, &st) != 0)
 		return (false);
 	if (S_ISREG(st.st_mode) != 0)
-		return (true) ;
+		return (true);
 	return (false);
-}
-
-// function to parse and populate a command from the tokens
-static t_cmd	*parse_cmd(t_shell *shell, int i)
-{
-	t_cmd	*cmd;
-	char	**args;
-	char	*name;
-
-	if (!shell || !shell->tokens || !shell->tokens[i])
-		return (NULL);
-	args = NULL;
-	name = NULL;
-	mark_and_replace(shell->tokens[i], ' ', 2);
-	args = ft_split(shell->tokens[i], 2);
-	// lol
-	mark_and_replace(shell->tokens[i], 2, ' ');
-	if (args && args[0])
-		name = set_name(args);
-	cmd = init_cmd(name, args);
-	free(name);
-	built_in_handle(cmd, shell, args);
-	add_last_cmd(&shell->cmds, cmd);
-	cmd_processor_a(cmd, shell, i);
-	free_split(args);
-	if (!cmd->is_valid)
-	 	return(invalid_exit(cmd, shell));	
-	ft_new_wildcard(cmd, shell);
-	if (cmd->args && cmd->args[0] && cmd->args[0][0] != '\0')
-		process_cmd_args(cmd);
-	return (cmd);
-}
-
-// function to find the head of the command linked list
-static t_cmd	*find_head(t_shell *shell)
-{
-	t_cmd	*head_cmd;
-
-	if (!shell || !shell->cmds)
-		return (NULL);
-	head_cmd = shell->cmds;
-	while (head_cmd && head_cmd->prev)
-		head_cmd = head_cmd->prev;
-	return (head_cmd);
-}
-
-// funciton that takes tokens and assembles into commands
-t_cmd	*build_cmds(t_shell *shell)
-{
-	t_cmd	*cmd;
-	t_cmd	*head_cmd;
-	int		i;
-
-	i = 0;
-	head_cmd = NULL;
-	if (!shell || !shell->tokens)
-		return (NULL);
-	while (shell->tokens[i])
-	{
-		cmd = parse_cmd(shell, i);
-		if (cmd == NULL)
-			return (NULL);
-		i++;
-	}
-	if (head_cmd == NULL)
-		head_cmd = shell->cmds;
-	else
-		head_cmd = find_head(shell);
-	if (head_cmd == NULL)
-		return (ft_printf_fd(2, "Error: No commands found.\n"), NULL);
-	return (head_cmd);
 }

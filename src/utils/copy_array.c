@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   copy_array.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joamiran <joamiran@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/31 18:17:21 by joao              #+#    #+#             */
+/*   Updated: 2025/06/02 22:03:59 by joamiran         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_utils.h"
 
 // function to copy an array of strings
@@ -20,4 +32,12 @@ char	**copy_array(char **array)
 	}
 	new_array[i] = NULL;
 	return (new_array);
+}
+
+// // function to check if a string starts with a redirection symbol
+bool	starts_with_redir(char *str)
+{
+	if (!str || !str[0])
+		return (false);
+	return (str[0] == '<' || str[0] == '>');
 }

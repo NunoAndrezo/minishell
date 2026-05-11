@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 01:57:15 by nuno              #+#    #+#             */
-/*   Updated: 2025/05/30 17:27:39 by nneves-a         ###   ########.fr       */
+/*   Updated: 2025/06/02 00:01:35 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*get_cd_path(t_cmd *cmd, t_shell *shell)
 	t_env_var	*dest;
 
 	dest = NULL;
-	if (!cmd->args[0])
+	if (!cmd->args || !cmd->args[0] || ft_strcmp(cmd->args[0], "~") == 0)
 	{
 		dest = find_env_var(shell->env, "HOME");
 		if (!dest || !dest->value)
@@ -61,10 +61,12 @@ static char	*get_cd_path(t_cmd *cmd, t_shell *shell)
 
 static void	change_dir(char *path, t_shell *shell)
 {
+	char	*str;
+
+	str = "No such file or directory";
 	if (chdir(path))
 	{
-		ft_printf_fd(STDERR_FILENO, "minishell: \
-			cd: %s: No such file or directory\n", path);
+		ft_printf_fd(STDERR_FILENO, "minishell: cd: %s: %s\n", path, str);
 		shell->exit_value = 1;
 		return ;
 	}

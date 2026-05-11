@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nuno <nuno@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 17:36:58 by nneves-a          #+#    #+#             */
-/*   Updated: 2025/05/30 19:47:39 by nneves-a         ###   ########.fr       */
+/*   Updated: 2025/06/01 21:58:05 by nuno             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,15 @@
 
 typedef struct s_sig
 {
-	int		status;
+	int		exit_value;
+	int		fd;
 	t_shell	*shull;
-}	t_sig;
+}			t_sig;
 
-t_sig	*t_pid(void);
+t_sig		*t_pid(void);
 
-// Setup signals
-void	setup_signals(t_shell *shell);
+void		setup_signals(t_shell *shell);
 
-void	setup_signals_heredoc(t_shell *shell);
+void		setup_signals_heredoc(t_shell *shell);
 
 #endif

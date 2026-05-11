@@ -1,14 +1,24 @@
-#include "ft_run.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_handler.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: joao <joao@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/01 18:11:36 by joao              #+#    #+#             */
+/*   Updated: 2025/06/01 18:11:36 by joao             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "ft_run.h"
 
 // function to close file des in a command
 void	close_fds(t_cmd *cmd)
 {
-	t_fd *tmp;
+	t_fd	*tmp;
 
 	if (!cmd || !cmd->fd_struct)
 		return ;
-
 	tmp = cmd->fd_struct;
 	while (tmp)
 	{
@@ -72,41 +82,6 @@ void	run_pipe(t_cmd *cmd, t_shell *shell)
 		close_pipes_after_fork(cmd);
 }
 
-// function to run a command without pipes
-void	run_no_pipe(t_cmd *cmd, t_shell *shell)
-{
-	if (!cmd || !shell || shell->is_pipe)
-		return ;
-	if (!cmd->is_builtin)
-	{
-		signal(SIGQUIT, SIG_IGN);
-		signal(SIGINT, SIG_IGN);
-		shell->wait = true;
-		if (cmd->is_valid == false)
-			return (ft_printf_fd(STDERR_FILENO, "%s command: not found\n", cmd->name),
-				shell->exit_value = 127, (void)0);
-		cmd->pid = fork();
-		if (cmd->pid == -1)
-		{
-			ft_putstr_fd("minishell: fork failed\n", STDERR_FILENO);
-			return (shell->exit_value = 1, (void)0);
-		}
-		if (cmd->pid == 0)
-		{
-			eggxecutor(cmd, shell, 1);
-			cmd->builtin_func(cmd, shell);
-			clean_exit(&shell);
-		}
-	}
-	else
-	{
-		shell->wait = false;
-		eggxecutor(cmd, shell, 0);
-		shell->is_child = false;
-		cmd->builtin_func(cmd, shell);
-	}
-}
-
 // wrapper function to process a command
 void	processor(t_cmd *cmd, t_shell *shell)
 {
@@ -116,4 +91,5 @@ void	processor(t_cmd *cmd, t_shell *shell)
 		run_pipe(cmd, shell);
 	else
 		run_no_pipe(cmd, shell);
+	setup_signals(shell);
 }

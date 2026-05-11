@@ -6,21 +6,23 @@
 /*   By: nneves-a <nneves-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/30 17:40:44 by nneves-a          #+#    #+#             */
-/*   Updated: 2025/05/30 18:02:27 by nneves-a         ###   ########.fr       */
+/*   Updated: 2025/06/02 16:50:52 by nneves-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_wildcard.h"
 
-//--- Helpers ----------------------------------------------------------------
 bool	has_wildcard(const char *s)
 {
 	int	i;
 
 	i = 0;
 	while (s[i])
-		if (s[i++] == '*')
+	{
+		if (s[i] == '*')
 			return (true);
+		i++;
+	}
 	return (false);
 }
 
@@ -40,6 +42,8 @@ bool	is_quoted(const char *s)
 	return (false);
 }
 
+//Splits the pattern argument by /, e.g. "src/*.c" becomes:
+//comps = {"src", "*.c", NULL};
 char	**split_path(const char *path)
 {
 	return (ft_split(path, '/'));
@@ -66,6 +70,5 @@ int	tolower_ci(int c)
 {
 	if (c >= 'A' && c <= 'Z')
 		return (c + 32);
-	else
-		return (c);
+	return (c);
 }
